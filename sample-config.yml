@@ -1,0 +1,7 @@
+
+bwuser: 'email address'
+bwpass: 'password'
+bwsignin: 'https://schools.mybrightwheel.com/sign-in'
+bwlist: 'https://schools.mybrightwheel.com/children/list'
+startdate: '01/01/2018'
+enddate: '07/07/2019'

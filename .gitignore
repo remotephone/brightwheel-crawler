@@ -1,0 +1,7 @@
+.vscode/
+config.yml
+*.log
+!pics/README.md
+pics/*.png
+pics/*.jpg
+pics/*.jpeg
