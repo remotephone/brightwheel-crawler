@@ -41,8 +41,8 @@ def signme_in(browser, username, password, signin_url):
     """Populate and send login info using U/P from config"""
 
     browser.get(signin_url)
-    loginuser = browser.find_element_by_id('textfield-input-2')
-    loginpass = browser.find_element_by_id('textfield-input-3')
+    loginuser = browser.find_element_by_id('username')
+    loginpass = browser.find_element_by_id('password')
     loginuser.send_keys(username)
     loginpass.send_keys(password)
 
@@ -96,7 +96,7 @@ def pic_finder(browser, kidlist_url, startdate, enddate):
 
     # This is the XPATH for the Apply button.
     browser.find_element_by_xpath(
-        '/html/body/div[2]/div/div/div[2]/div/main/div/form/button'
+        '/html/body/div[2]/div/main/div/div/div[2]/div/form/button'
         ).click()
 
     try:
@@ -137,7 +137,7 @@ def pic_finder(browser, kidlist_url, startdate, enddate):
         print('none')
 
     matches = re.findall(
-        r'(?<=src=\")https:\/\/cdn\.mybrightwheel\.com\/media_images\/images\/.*png(?="?)',
+        r'(?<=href=\")https:\/\/cdn\.mybrightwheel\.com\/media_images\/images\/.*cover.*jpg(?="?)',
         browser.page_source)
     count_matches = len(matches)
     if count_matches == 0:
