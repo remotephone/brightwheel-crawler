@@ -142,7 +142,7 @@ def pic_finder(browser, kidlist_url, startdate, enddate):
         print('none')
 
     matches = re.findall(
-        r'(?<=href=\")https:\/\/cdn\.mybrightwheel\.com\/media_images\/images\/.*cover.*jpg(?="?)',
+        r'(?<=href=\")https:\/\/cdn\.mybrightwheel\.com\/media_images\/images\/[0-9a-zA-Z\/]*\.(?:jpg|png)(?="?)',
         browser.page_source)
     count_matches = len(matches)
     if count_matches == 0:
