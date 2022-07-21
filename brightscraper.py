@@ -41,9 +41,14 @@ def signme_in(browser, username, password, signin_url):
     """Populate and send login info using U/P from config"""
 
     browser.get(signin_url)
-    loginuser = browser.find_element_by_id('username')
-    loginpass = browser.find_element_by_id('password')
+    time.sleep(2)
+    loginuser = browser.find_element(By.XPATH, '//input[@id="username"]')
+    loginpass = browser.find_element(By.ID, 'password')
+    loginuser.click()
+    time.sleep(2)
     loginuser.send_keys(username)
+    loginpass.click()
+    time.sleep(2)
     loginpass.send_keys(password)
 
     # Submit login, have to wait for page to change
@@ -69,7 +74,7 @@ def pic_finder(browser, kidlist_url, startdate, enddate):
     # This xpath is generic enough to find any student listed.
     # You need to iterate through a list you create if you have more than one
     try:
-        students = browser.find_element_by_xpath(
+        students = browser.find_element(By.XPATH,
             "//a[contains(@href, '/students/')]"
             )
         profile_url = students.get_property('href')
@@ -81,21 +86,21 @@ def pic_finder(browser, kidlist_url, startdate, enddate):
     time.sleep(3)
 
     # Get to feed, this is where the pictures are
-    pics = browser.find_element_by_link_text('Feed')
+    pics = browser.find_element(By.LINK_TEXT, 'Feed')
     pics.click()
     time.sleep(3)
 
     # Populate the selector for date range to load all images
-    start_date = browser.find_element_by_name('activity-start-date')
+    start_date = browser.find_element(By.NAME, 'activity-start-date')
     start_date.send_keys(startdate)
-    end_date = browser.find_element_by_name('activity-end-date')
+    end_date = browser.find_element(By.NAME, 'activity-end-date')
     end_date.send_keys(enddate)
-    select = browser.find_element_by_id('select-input-2')
+    select = browser.find_element(By.ID, 'select-input-2')
     select.send_keys('Photo')
     select.send_keys(Keys.ENTER)
 
     # This is the XPATH for the Apply button.
-    browser.find_element_by_xpath(
+    browser.find_element(By.XPATH,
         '/html/body/div[2]/div/main/div/div/div[2]/div/form/button'
         ).click()
 
