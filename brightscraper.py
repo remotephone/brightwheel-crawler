@@ -41,8 +41,8 @@ def signme_in(browser, username, password, signin_url):
     """Populate and send login info using U/P from config"""
 
     browser.get(signin_url)
-    loginuser = browser.find_element_by_id('username')
-    loginpass = browser.find_element_by_id('password')
+    loginuser = browser.find_element(By.ID, 'username')
+    loginpass = browser.find_element(By.ID,'password')
     loginuser.send_keys(username)
     loginpass.send_keys(password)
 
@@ -81,16 +81,16 @@ def pic_finder(browser, kidlist_url, startdate, enddate):
     time.sleep(3)
 
     # Get to feed, this is where the pictures are
-    pics = browser.find_element_by_link_text('Feed')
+    pics = browser.find_element(By.LINK_TEXT, 'Feed')
     pics.click()
     time.sleep(3)
 
     # Populate the selector for date range to load all images
-    start_date = browser.find_element_by_name('activity-start-date')
+    start_date = browser.find_element(By.NAME, 'activity-start-date')
     start_date.send_keys(startdate)
-    end_date = browser.find_element_by_name('activity-end-date')
+    end_date = browser.find_element(By.NAME, 'activity-end-date')
     end_date.send_keys(enddate)
-    select = browser.find_element_by_id('select-input-2')
+    select = browser.find_element(By.ID, 'select-input-2')
     select.send_keys('Photo')
     select.send_keys(Keys.ENTER)
 
