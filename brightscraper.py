@@ -41,9 +41,14 @@ def signme_in(browser, username, password, signin_url):
     """Populate and send login info using U/P from config"""
 
     browser.get(signin_url)
-    loginuser = browser.find_element(By.ID, 'username')
-    loginpass = browser.find_element(By.ID,'password')
+    time.sleep(2)
+    loginuser = browser.find_element(By.XPATH, '//input[@id="username"]')
+    loginpass = browser.find_element(By.ID, 'password')
+    loginuser.click()
+    time.sleep(2)
     loginuser.send_keys(username)
+    loginpass.click()
+    time.sleep(2)
     loginpass.send_keys(password)
 
     # Submit login, have to wait for page to change
@@ -69,7 +74,7 @@ def pic_finder(browser, kidlist_url, startdate, enddate):
     # This xpath is generic enough to find any student listed.
     # You need to iterate through a list you create if you have more than one
     try:
-        students = browser.find_element_by_xpath(
+        students = browser.find_element(By.XPATH,
             "//a[contains(@href, '/students/')]"
             )
         profile_url = students.get_property('href')
@@ -95,7 +100,7 @@ def pic_finder(browser, kidlist_url, startdate, enddate):
     select.send_keys(Keys.ENTER)
 
     # This is the XPATH for the Apply button.
-    browser.find_element_by_xpath(
+    browser.find_element(By.XPATH,
         '/html/body/div[2]/div/main/div/div/div[2]/div/form/button'
         ).click()
 
@@ -137,7 +142,7 @@ def pic_finder(browser, kidlist_url, startdate, enddate):
         print('none')
 
     matches = re.findall(
-        r'(?<=href=\")https:\/\/cdn\.mybrightwheel\.com\/media_images\/images\/.*cover.*jpg(?="?)',
+        r'(?<=href=\")https:\/\/cdn\.mybrightwheel\.com\/media_images\/images\/[0-9a-zA-Z\/]*\.(?:jpg|png)(?="?)',
         browser.page_source)
     count_matches = len(matches)
     if count_matches == 0:
