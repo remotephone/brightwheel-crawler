@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+requests = "*"
+selenium = "==4.11.2"
+pyyaml = "*"
+undetected-chromedriver = "*"
+
+[dev-packages]
+black = "*"
+
+[requires]
+python_version = "3.11"
