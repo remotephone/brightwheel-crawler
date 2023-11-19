@@ -8,6 +8,7 @@ requests = "*"
 selenium = "==4.11.2"
 pyyaml = "*"
 undetected-chromedriver = "*"
+exifread = "*"
 
 [dev-packages]
 black = "*"

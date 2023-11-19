@@ -95,7 +95,7 @@ def pic_finder(browser, kidlist_url, startdate, enddate, args):
     # You need to iterate through a list you create if you have more than one
     try:
         students = browser.find_elements(By.XPATH, "//a[contains(@href, '/students/')]")
-        lo("got students")
+        logger.info("got students")
         if not students:
             raise Exception("No student URLs found")
         if args.student_number:
