@@ -40,3 +40,7 @@ I _used to_ want to add image recognition to this to be able to parse out my kid
 
 1. Photos are stored with the raw filename and do not store the date
 2. Probably some others, please open an issue
+
+### rename.py
+
+This is a script to get the exifdata from the image and rename the file to be prefixed by the date. This should help sorting them if you do that. You need exiftool installed for it to work. I tried using exifreader and pillow and neither worked for me :shrug:

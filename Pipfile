@@ -7,8 +7,7 @@ name = "pypi"
 requests = "*"
 selenium = "==4.11.2"
 pyyaml = "*"
-undetected-chromedriver = "*"
-exifread = "*"
+undetected-chromedriver = "==3.5.4"
 
 [dev-packages]
 black = "*"
