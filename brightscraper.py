@@ -138,14 +138,13 @@ def pic_finder(browser, kidlist_url, startdate, enddate, args):
 
     # This is the XPATH for the Apply button.
     browser.find_element(By.XPATH, '//*[@id="main"]/div/div/div[2]/div/form/button').click()
-
+    logger.info("[-] - Applied date range")
     try:
         last_height = browser.execute_script("return document.body.scrollHeight")
         counter = 0
         state = True
         while state is True:
             try:
-                counter += 1
                 button = WebDriverWait(browser, 7).until(EC.presence_of_element_located((By.XPATH, '//button[text()="Load more"]')))
                 button.click()
             except:
@@ -154,6 +153,7 @@ def pic_finder(browser, kidlist_url, startdate, enddate, args):
                 else:
                     logger.error("[!] No loading button found")
             browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            counter += 1
 
             # Wait to load the page.
             time.sleep(2)
@@ -170,10 +170,8 @@ def pic_finder(browser, kidlist_url, startdate, enddate, args):
     except ElementNotVisibleException:
         logger.info("none")
 
-    matches = re.findall(
-        r'(?<=href=\")https:\/\/cdn\.mybrightwheel\.com\/media_images\/images\/[0-9a-zA-Z\/]*\.(?:jpg|png)(?="?)',
-        browser.page_source,
-    )
+
+    matches = re.findall(r'<img\s+src="([^"]+)"', browser.page_source,)
     count_matches = len(matches)
     if count_matches == 0:
         logger.error("[!] No Images found to download! Check the source target page")
@@ -184,33 +182,42 @@ def pic_finder(browser, kidlist_url, startdate, enddate, args):
 
 
 def get_images(browser, matches):
-    """Since Selenium doesn't handle saving images well, requests
+    """Brightwheel moved their image storage to a CDN with signed urls, so we dont need to use
+    cookies anymore. I'm eaving this code in case that behavior ever comes back
+    
+    Since Selenium doesn't handle saving images well, requests
     can do this for us, but we need to pass it the cookies"""
     # Check if the ./pics/ directory exists, create it if it doesn't
     if not os.path.exists('./pics/'):
         os.makedirs('./pics/')
 
-    cookies = browser.get_cookies()
-
-    session = requests.Session()
-    for cookie in cookies:
-        session.cookies.set(cookie["name"], cookie["value"])
+    # cookies = browser.get_cookies()
+    # session = requests.Session()
+    # for cookie in cookies:
+    #     session.cookies.set(cookie["name"], cookie["value"])
+    # for match in matches:
+    #     try:
+    #         filename = match.split("/")[-1].split("?")[0].split("%2F")[-1]
+    #         request = session.get(match)
+    #         open("./pics/" + filename, "wb").write(request.content)
+    #         logger.info("[-] - Downloading {}".format(filename))
+    #     except:
+    #         logger.error("[!] - Failed to save {}".format(match))
+    # try:
+    #     session.cookies.clear()
+    #     browser.delete_all_cookies()
+    #     logger.info("[-] - Cleared cookies")
+    # except:
+    #     logger.error("[!] - Failed to clear cookies")
 
     for match in matches:
         try:
-            filename = match.split("/")[-1]
-            request = session.get(match)
+            filename = match.split("/")[-1].split("?")[0].split("%2F")[-1]
+            request = requests.get(match)
             open("./pics/" + filename, "wb").write(request.content)
             logger.info("[-] - Downloading {}".format(filename))
         except:
             logger.error("[!] - Failed to save {}".format(match))
-
-    try:
-        session.cookies.clear()
-        browser.delete_all_cookies()
-        logger.info("[-] - Cleared cookies")
-    except:
-        logger.error("[!] - Failed to clear cookies")
 
 
 def use_chrome_selenium():
