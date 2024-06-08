@@ -1,9 +1,11 @@
 import logging
+import os
 import re
 import time
 import yaml
 import argparse
 import random
+import sys
 
 import requests
 import undetected_chromedriver as uc
@@ -184,6 +186,10 @@ def pic_finder(browser, kidlist_url, startdate, enddate, args):
 def get_images(browser, matches):
     """Since Selenium doesn't handle saving images well, requests
     can do this for us, but we need to pass it the cookies"""
+    # Check if the ./pics/ directory exists, create it if it doesn't
+    if not os.path.exists('./pics/'):
+        os.makedirs('./pics/')
+
     cookies = browser.get_cookies()
 
     session = requests.Session()
@@ -217,18 +223,21 @@ def use_chrome_selenium():
 def use_existing_chrome_session():
     # Check if chrome is listening on port 9222
     # If not, start it
-
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.debugger_address = "127.0.0.1:9222"
-    browser = webdriver.Chrome(options=chrome_options)
-    return browser
+    try:
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.debugger_address = "127.0.0.1:9222"
+        browser = webdriver.Chrome(options=chrome_options)
+        return browser
+    except Exception as e:
+        logger.error(f"An error occurred: {e} - Please ensure Chrome is listening on port 9222")
+        sys.exit(1)
 
 
 def main():
     parser = argparse.ArgumentParser(description="Brightwheel Scraper")
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("-c", "--chrome-selenium", action="store_true", help="Use existing Chrome session to login to Brightwheel")
-    group.add_argument("-e", "--chrome-session", action="store_true", help="Use existing Chrome session to login to Brightwheel")
+    group.add_argument("-c", "--chrome_selenium", action="store_true", help="Use existing Chrome session to login to Brightwheel")
+    group.add_argument("-e", "--chrome_session", action="store_true", help="Use existing Chrome session to login to Brightwheel")
     parser.add_argument(
         "-n", "--student-number", type=int, help="Select a student by number, indexed starting at 0. Look at the student list and count in order"
     )
@@ -236,7 +245,7 @@ def main():
 
     if args.chrome_selenium:
         browser = use_chrome_selenium()
-    elif args.chrome - session:
+    elif args.chrome_session:
         browser = use_existing_chrome_session()
     else:
         logger.error("[!] - No browser selected, exiting")
