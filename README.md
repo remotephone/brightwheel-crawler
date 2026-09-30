@@ -36,11 +36,18 @@ I _used to_ want to add image recognition to this to be able to parse out my kid
 8. If you did not pass an index number for the kid, you will be prompted to select one
 9. Wait until the script stops (returns to command prompt) and close Chrome
 
+### Photo Dates & EXIF Metadata
+
+Downloaded photos are automatically bound to their post date from the Brightwheel feed:
+- Files are saved with a date prefix (`YYYY_MM_DD_<filename>`) for easy chronological sorting.
+- If `exiftool` is installed on your system, `DateTimeOriginal` and `CreateDate` EXIF tags are written directly to the image files. This ensures photo management tools (Apple Photos, Google Photos, Immich, etc.) recognize the original photo dates rather than the download timestamp.
+- Pass `--no-date-prefix` or `--no-exif` if you prefer raw filenames or want to skip EXIF tagging.
+
 ### Limitations
 
-1. Photos are stored with the raw filename and do not store the date
+1. Captcha challenges are not automated; manual interaction is required if prompted.
 2. Probably some others, please open an issue
 
 ### rename.py
 
-This is a script to get the exifdata from the image and rename the file to be prefixed by the date. This should help sorting them if you do that. You need exiftool installed for it to work. I tried using exifreader and pillow and neither worked for me :shrug:
+This is a helper script to rename existing photos using their EXIF date (checking `DateTimeOriginal`, `CreateDate`, or `Datecreate`). If photos were downloaded with `brightscraper.py`, they will already have date prefixes and EXIF tags, but `rename.py` remains useful for processing older downloads or standalone collections. You need `exiftool` installed for it to work.

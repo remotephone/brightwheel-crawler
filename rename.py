@@ -4,13 +4,18 @@ from datetime import datetime
 import subprocess
 
 def get_exif_date(image_path):
-    try:
-        exif_output = subprocess.check_output(['exiftool', '-Datecreate', image_path])
-        exif_data = exif_output.decode().strip().split(': ')[-1]
-        if exif_data:
-            return datetime.strptime(exif_data, '%Y-%m-%dT%H:%M:%S+00:00')
-    except Exception as e:
-        print(f"Error reading EXIF data: {e}")
+    for tag in ['-DateTimeOriginal', '-CreateDate', '-Datecreate']:
+        try:
+            exif_output = subprocess.check_output(['exiftool', tag, image_path], stderr=subprocess.DEVNULL)
+            exif_data = exif_output.decode().strip().split(': ', 1)[-1]
+            if exif_data:
+                for fmt in ('%Y:%m:%d %H:%M:%S', '%Y-%m-%dT%H:%M:%S+00:00', '%Y-%m-%d %H:%M:%S'):
+                    try:
+                        return datetime.strptime(exif_data, fmt)
+                    except ValueError:
+                        continue
+        except Exception:
+            pass
     return None
 
 def rename_photo_with_date(image_path, live=False):
@@ -20,7 +25,12 @@ def rename_photo_with_date(image_path, live=False):
         return
 
     file_name = os.path.basename(image_path)
-    new_file_name = f"{date.strftime('%Y_%m_%d')}_{file_name}"
+    date_prefix = f"{date.strftime('%Y_%m_%d')}_"
+    if file_name.startswith(date_prefix):
+        print(f"Skipping {file_name}: already prefixed with date")
+        return
+
+    new_file_name = f"{date_prefix}{file_name}"
     new_file_path = os.path.join(os.path.dirname(image_path), new_file_name)
 
     if live:
