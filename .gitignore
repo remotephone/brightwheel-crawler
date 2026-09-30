@@ -5,3 +5,5 @@ config.yml
 pics/*.png
 pics/*.jpg
 pics/*.jpeg
+__pycache__/
+*.pyc
